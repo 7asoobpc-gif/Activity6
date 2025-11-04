@@ -217,37 +217,7 @@
             color: #1e3a5f;
         }
 
-        .signature-section {
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
 
-        .signature-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .signature-box {
-            flex: 1;
-            text-align: center;
-        }
-
-        .signature-line {
-            border-top: 2px solid #333;
-            margin-bottom: 10px;
-            height: 80px;
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .signature-label {
-            font-size: 13px;
-            color: #333;
-            font-weight: bold;
-        }
 
         .button-group {
             display: flex;
@@ -307,7 +277,140 @@
             margin-bottom: 10px;
         }
 
-        /* Print styles */
+        /* PDF Report Styles */
+        .pdf-report {
+            display: none;
+        }
+
+        .pdf-report.active {
+            display: block;
+        }
+
+        .pdf-header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8c 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 4px solid #d4af37;
+            margin-bottom: 30px;
+        }
+
+        .pdf-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pdf-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .pdf-header-text h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .pdf-header-text p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .pdf-content {
+            padding: 30px;
+        }
+
+        .pdf-section {
+            margin-bottom: 25px;
+        }
+
+        .pdf-section-title {
+            background: #f0f4f8;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-right: 4px solid #1e3a5f;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e3a5f;
+        }
+
+        .pdf-field {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .pdf-field-label {
+            flex: 0 0 180px;
+            font-weight: bold;
+            color: #1e3a5f;
+            font-size: 13px;
+        }
+
+        .pdf-field-value {
+            flex: 1;
+            font-size: 13px;
+            color: #333;
+            word-wrap: break-word;
+        }
+
+        .pdf-images-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .pdf-images-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .pdf-image-item {
+            text-align: center;
+        }
+
+        .pdf-image-item img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-signatures {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+
+
+        .pdf-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
         @media print {
             body {
                 background: white;
@@ -321,19 +424,6 @@
 
             .button-group {
                 display: none;
-            }
-
-            .form-input, .form-textarea {
-                border-bottom-color: #333;
-                border-color: #333;
-            }
-
-            .images-preview {
-                page-break-inside: avoid;
-            }
-
-            .image-item {
-                page-break-inside: avoid;
             }
         }
 
@@ -368,11 +458,15 @@
             .images-preview {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             }
+
+            .pdf-images-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="printContent">
+    <div class="container" id="formContainer">
         <!-- Header -->
         <div class="header">
             <div class="header-content">
@@ -405,6 +499,11 @@
             <div class="form-group">
                 <label class="form-label">الفئة المستهدفة:</label>
                 <input type="text" class="form-input" id="targetAudience" placeholder="مثال: الطالبات، المعلمات، أولياء الأمور...">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">القسم:</label>
+                <input type="text" class="form-input" id="department" placeholder="مثال: اللغة العربية، الإسلامية، الرياضيات...">
             </div>
 
             <div class="form-group">
@@ -442,27 +541,7 @@
                 <div class="images-preview" id="imagesPreview"></div>
             </div>
 
-            <!-- Signatures -->
-            <div class="section-title">التوقيعات والموافقات</div>
 
-            <div class="signature-section">
-                <div class="signature-row">
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <div class="signature-label">رئيس القسم</div>
-                        <div style="font-size: 12px; margin-top: 5px; color: #666;">
-                            <input type="text" class="form-input" id="departmentHead" placeholder="الاسم" style="border-bottom: 1px dotted #999; margin-top: 8px;">
-                        </div>
-                    </div>
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <div class="signature-label">مدير المدرسة</div>
-                        <div style="font-size: 12px; margin-top: 5px; color: #666;">
-                            <input type="text" class="form-input" id="schoolDirector" placeholder="الاسم" style="border-bottom: 1px dotted #999; margin-top: 8px;">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -471,6 +550,74 @@
         <button class="btn btn-primary" onclick="exportPDF()">تصدير إلى PDF</button>
         <button class="btn btn-secondary" onclick="window.print()">طباعة</button>
         <button class="btn btn-secondary" onclick="clearForm()">مسح البيانات</button>
+    </div>
+
+    <!-- PDF Report (Hidden) -->
+    <div class="pdf-report" id="pdfReport">
+        <div class="pdf-header">
+            <div class="pdf-header-content">
+                <div class="pdf-logo">
+                    <img src="logo.png" alt="شعار وزارة التربية">
+                </div>
+                <div class="pdf-header-text">
+                    <h1>تقرير الفعالية</h1>
+                    <p>مدرسة عاتكة بنت عبدالمطلب</p>
+                    <p>وزارة التربية - دولة الكويت</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pdf-content">
+            <!-- Basic Information Section -->
+            <div class="pdf-section">
+                <div class="pdf-section-title">معلومات الفعالية</div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">نوع الفعالية:</div>
+                    <div class="pdf-field-value" id="pdf-eventType">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">عنوان الفعالية:</div>
+                    <div class="pdf-field-value" id="pdf-eventTitle">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">الفئة المستهدفة:</div>
+                    <div class="pdf-field-value" id="pdf-targetAudience">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">القسم:</div>
+                    <div class="pdf-field-value" id="pdf-department">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">المعلم/ة المشرف/ة:</div>
+                    <div class="pdf-field-value" id="pdf-supervisor">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">تاريخ الفعالية:</div>
+                    <div class="pdf-field-value" id="pdf-eventDate">-</div>
+                </div>
+                <div class="pdf-field">
+                    <div class="pdf-field-label">مكان الفعالية:</div>
+                    <div class="pdf-field-value" id="pdf-eventLocation">-</div>
+                </div>
+            </div>
+
+            <!-- Report Section -->
+            <div class="pdf-section">
+                <div class="pdf-section-title">التقرير</div>
+                <div class="pdf-field-value" id="pdf-reportText" style="white-space: pre-wrap; line-height: 1.6;">-</div>
+            </div>
+
+            <!-- Images Section -->
+            <div class="pdf-images-section" id="pdf-images-section" style="display: none;">
+                <div class="pdf-section-title">الصور المرفقة</div>
+                <div class="pdf-images-grid" id="pdf-images-grid"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="pdf-footer">
+                <p>تم تصميم هذا الموقع بواسطة: رئيسة قسم الحاسوب أ. مريم الفيلكاوي</p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -514,53 +661,48 @@
             displayImages();
         }
 
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString + 'T00:00:00');
+            const options = { year: 'numeric', month: 'long', day: 'numeric', locale: 'ar-KW' };
+            return date.toLocaleDateString('ar-KW', options);
+        }
+
         function exportPDF() {
-            // Create a clone of the content for PDF export
-            const element = document.getElementById('printContent').cloneNode(true);
+            // Populate PDF report with form data
+            document.getElementById('pdf-eventType').textContent = document.getElementById('eventType').value || '-';
+            document.getElementById('pdf-eventTitle').textContent = document.getElementById('eventTitle').value || '-';
+            document.getElementById('pdf-targetAudience').textContent = document.getElementById('targetAudience').value || '-';
+            document.getElementById('pdf-department').textContent = document.getElementById('department').value || '-';
+            document.getElementById('pdf-supervisor').textContent = document.getElementById('supervisor').value || '-';
+            document.getElementById('pdf-eventDate').textContent = formatDate(document.getElementById('eventDate').value);
+            document.getElementById('pdf-eventLocation').textContent = document.getElementById('eventLocation').value || '-';
+            document.getElementById('pdf-reportText').textContent = document.getElementById('reportText').value || '-';
+
+            // Add images to PDF if they exist
+            const imagesSection = document.getElementById('pdf-images-section');
+            const imagesGrid = document.getElementById('pdf-images-grid');
             
-            // Add images to the PDF if they exist
             if (uploadedImages.length > 0) {
-                const imagesSection = document.createElement('div');
-                imagesSection.style.marginTop = '30px';
-                imagesSection.style.paddingTop = '30px';
-                imagesSection.style.borderTop = '2px solid #e0e0e0';
-                
-                const imagesTitle = document.createElement('div');
-                imagesTitle.style.background = '#f0f4f8';
-                imagesTitle.style.padding = '15px 20px';
-                imagesTitle.style.marginBottom = '20px';
-                imagesTitle.style.borderRight = '5px solid #1e3a5f';
-                imagesTitle.style.fontSize = '16px';
-                imagesTitle.style.fontWeight = 'bold';
-                imagesTitle.style.color = '#1e3a5f';
-                imagesTitle.textContent = 'الصور المرفقة';
-                
-                imagesSection.appendChild(imagesTitle);
-                
-                const imagesContainer = document.createElement('div');
-                imagesContainer.style.display = 'grid';
-                imagesContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
-                imagesContainer.style.gap = '15px';
-                
+                imagesGrid.innerHTML = '';
                 uploadedImages.forEach(image => {
                     const imgWrapper = document.createElement('div');
-                    imgWrapper.style.textAlign = 'center';
+                    imgWrapper.className = 'pdf-image-item';
                     
                     const img = document.createElement('img');
                     img.src = image.src;
-                    img.style.maxWidth = '100%';
-                    img.style.maxHeight = '300px';
-                    img.style.borderRadius = '4px';
-                    img.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
                     
                     imgWrapper.appendChild(img);
-                    imagesContainer.appendChild(imgWrapper);
+                    imagesGrid.appendChild(imgWrapper);
                 });
-                
-                imagesSection.appendChild(imagesContainer);
-                element.querySelector('.content').appendChild(imagesSection);
+                imagesSection.style.display = 'block';
+            } else {
+                imagesSection.style.display = 'none';
             }
 
+            // Get the PDF report element
+            const element = document.getElementById('pdfReport');
+            
             const opt = {
                 margin: 10,
                 filename: 'activities_report.pdf',
@@ -588,6 +730,11 @@
         document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(field => {
             field.addEventListener('change', saveFormData);
             field.addEventListener('input', saveFormData);
+        });
+
+        // Also save on blur for better data persistence
+        document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(field => {
+            field.addEventListener('blur', saveFormData);
         });
 
         function saveFormData() {
